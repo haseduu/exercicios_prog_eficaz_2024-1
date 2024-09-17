@@ -1,4 +1,4 @@
-# Desafio 1 de Web Services RESTful com Flask, PostgreSQL e ElephantSQL
+# Desafio 1 de Web Services RESTful com Flask e MySQL
 
 ## Objetivo
 Neste desafio, você desenvolverá um sistema completo de vendas online, abrangendo clientes, produtos, estoque, carrinhos de compras e pedidos. Implementando RESTful Web Services com Flask e MySql, seu objetivo é construir uma API RESTful robusta, aplicando os princípios do Nível 2 do Modelo de Maturidade de Richardson.
