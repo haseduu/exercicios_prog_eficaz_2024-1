@@ -1,7 +1,7 @@
 # Desafio 1 de Web Services RESTful com Flask, PostgreSQL e ElephantSQL
 
 ## Objetivo
-Neste desafio, você desenvolverá um sistema completo de vendas online, abrangendo clientes, produtos, estoque, carrinhos de compras e pedidos. Implementando RESTful Web Services com Flask e PostgreSQL na ElephantSQL, seu objetivo é construir uma API RESTful robusta, aplicando os princípios do Nível 2 do Modelo de Maturidade de Richardson.
+Neste desafio, você desenvolverá um sistema completo de vendas online, abrangendo clientes, produtos, estoque, carrinhos de compras e pedidos. Implementando RESTful Web Services com Flask e MySql, seu objetivo é construir uma API RESTful robusta, aplicando os princípios do Nível 2 do Modelo de Maturidade de Richardson.
 
 ## Requisitos do Sistema
 
@@ -14,13 +14,12 @@ Mantenha uma estrutura de projeto limpa e organizada, dividida em:
 ### Modelagem Relacional
 Desenvolva um esquema de banco de dados relacional no PostgreSQL com as seguintes entidades e atributos:
 
-#### Entidades
-- **Clientes**: `id` (auto incremento), `nome`, `email` (único), `cpf` (único), `senha`.
-- **Produtos**: `id` (auto incremento), `nome`, `descricao`, `preco`, `estoque`.
-- **Fornecedores**: `id` (auto incremento), `nome`, `email` (único), `cnpj` (único).
-- **Estoque_Fornecedor**: `produto_id`, `fornecedor_id`, `quantidade`, `preco_custo`.
-- **Carrinho**: `id` (auto incremento), `cliente_id`, `produto_id`, `quantidade`.
-- **Pedido**: `id` (auto incremento), `cliente_id`, `data_hora`, `valor_total`, `status` (`pendente`, `aprovado`, `cancelado`, `entregue`).
+#### Tabelas
+- **tbl_clientes**: `id` (auto incremento), `nome`, `email` (único), `cpf` (único), `senha`.
+- **tbl_produtos**: `id` (auto incremento), `nome`, `descricao`, `preco`, `qtd_em_estoque`, `fornecedor_id`, `custo_no_fornecedor`.
+- **tbl_fornecedores**: `id` (auto incremento), `nome`, `email` (único), `cnpj` (único).
+- **tbl_carrinho**: `id` (auto incremento), `produto_id`, `quantidade`.
+- **tbl_pedido**: `id` (auto incremento), `cliente_id`, `carrinho_id`, `data_hora`, `status` (`pendente`, `aprovado`, `cancelado`, `entregue`).
 
 ### Implementação da API RESTful
 
@@ -29,26 +28,30 @@ Desenvolva um esquema de banco de dados relacional no PostgreSQL com as seguinte
 - **Clientes**
   - `GET /clientes`: Lista todos os clientes.
   - `POST /clientes`: Cria um novo cliente.
-  - `GET /clientes/{id}`: Detalhes do cliente.
-  - `PUT /clientes/{id}`: Atualiza cliente.
-  - `DELETE /clientes/{id}`: Exclui cliente.
+  - `GET /clientes/{cliente_id}`: Detalhes do cliente.
+  - `PUT /clientes/{cliente_id}`: Atualiza cliente.
+  - `DELETE /clientes/{cliente_id}`: Exclui cliente.
 
 - **Produtos**
   - `GET /produtos`: Lista todos os produtos.
   - `POST /produtos`: Cria novo produto.
-  - `GET /produtos/{id}`: Detalhes do produto.
-  - `PUT /produtos/{id}`: Atualiza produto.
-  - `DELETE /produtos/{id}`: Exclui produto.
+  - `GET /produtos/{produto_id}`: Detalhes do produto.
+  - `PUT /produtos/{produto_id}`: Atualiza produto.
+  - `DELETE /produtos/{produto_id}`: Exclui produto.
 
 - **Carrinho**
-  - `POST /carrinho`: Adiciona item ao carrinho.
-  - `PUT /carrinho/{id}`: Atualiza item no carrinho.
-  - `DELETE /carrinho/{id}`: Remove item do carrinho.
+  - `POST /carrinhos`: Adiciona item ao carrinho.
+  - `PUT /carrinhos/{carrinho_id}`: Atualiza item no carrinho.
+  - `DELETE /carrinhos/{carrinho_id}`: Remove item do carrinho.
+  - `GET /carrinhos`: Lista todos os carrinhos.
+  - `GET /carrinhos/{carrinho_id}`: Lista um carrinho específico.
+  - `GET /carrinhos/cliente/{cliente_id}`: Lista todos os carrinhos de um cliente específico.
 
 - **Pedidos**
-  - `GET /pedidos`: Lista pedidos do cliente.
+  - `GET /pedidos`: Lista todos os pedidos do cliente.
   - `POST /pedidos`: Cria novo pedido.
-  - `GET /pedidos/{id}`: Detalhes do pedido.
+  - `GET /pedidos/{pedido_id}`: Detalhes do pedido.
+  - `GET /pedidos/cliente/{cliente_id}`: Lista pedidos do cliente.
 
 - **Pense e crie o restante das especificações de rota dos recursos não listado acima**
 
@@ -56,9 +59,8 @@ Desenvolva um esquema de banco de dados relacional no PostgreSQL com as seguinte
 #### Relacionamentos e Restrições:
 
 - Um cliente pode ter vários pedidos.
-- Um produto pode ter vários fornecedores.
-- Um fornecedor pode fornecer vários produtos.
-- Um pedido pode ter vários itens (relacionamento com Carrinho).
+- Um carinho pode ter vários produtos e um produto pode estar em vários carrinhos. 
+- Um pedido tem um cliente e um carrinho (relacionamento com Carrinho).
 
 
 #### Códigos de Status HTTP
@@ -75,7 +77,7 @@ Permita atualizações parciais de recursos nos endpoints apropriados.
 
 ### Deploy
 
-Realize o deploy de sua API na Heroku ou outra plataforma de nuvem.
+Realize o deploy de sua API no Render ou outra plataforma de nuvem.
 
 #### Filtros e Ordenação
 
@@ -83,11 +85,11 @@ Implemente filtros e ordenação nos endpoints de listagem.
 
 #### Imagens para Produtos (totalmente opcional)
 
-Adicione suporte a imagens nos produtos.
+Adicione suporte a imagens nos produtos. [Não cai na prova]
 
 #### Sistema de Notificações (totalmente opcional)
 
-Crie notificações por email para pedidos. Dica: Pesquise "enviar email gmail flask".
+Crie notificações por email para pedidos. Dica: Pesquise "enviar email gmail flask". [Não cai na prova]
 
 ## Tutoriais e Recursos
 
@@ -98,26 +100,6 @@ Aqui estão alguns recursos que podem ajudá-lo a completar este desafio:
 ### Notion da dicplina: 
 - https://slender-ceder-1da.notion.site/a09548d285554638af41c2ad3989b79f?v=c25df69714e94eb1aca7df10cebb9ec7&pvs=4
 
-
-### Ajuda com a plataforma ElephantSQL
-
-- Introdução e Configurações Iniciais: https://www.elephantsql.com/blog/databases-for-beginners-what-is-a-database-what-is-postgresql.html
-
-- Conectando o pgAdmin ao seu server Elephant: https://www.elephantsql.com/docs/pgadmin.html
-
-- Documentação oficial: https://www.elephantsql.com/docs/index.html
-
-### Ajuda com pgAdmin
-
-- Introdução ao pgAdmin: https://www.w3schools.com/postgresql/postgresql_pgadmin4.php
-
-- Documentação oficial: https://www.pgadmin.org/docs/pgadmin4/8.3/index.html
-
-### Ajuda com o Python utilizando a base PostgreSql (psycog2)
-
-- Tutorial excelente sobre psycog2: https://www.tutorialspoint.com/postgresql/postgresql_python.htm
-
-- Documentação oficial: https://www.psycopg.org/docs/
 
 ### Ajuda com Flask
 
@@ -137,12 +119,6 @@ Aqui estão alguns recursos que podem ajudá-lo a completar este desafio:
 
 - Importando uma collection: https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-data/
 
-
-### Ajuda com Heroku
-
-- Criando conta estudante no Heroku (precisa de cartão): https://youtu.be/aSdx43pesV4?si=PvvuopBh5rUpMa2R
-- Fazendo deploy no Heroku: https://youtu.be/OU_Fqt1pBPM?si=F4jPWgEXyigcIYBQ
-- Deploy de Flask no Heroku - Alt 1: https://github.com/datademofun/heroku-basic-flask 
 
 ## Conclusão
 
