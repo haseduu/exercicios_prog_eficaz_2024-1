@@ -6,6 +6,17 @@ from mysql.connector import Error
 from dotenv import load_dotenv
 
 app = Flask(__name__)
+load_dotenv('.cred')
+
+# Database connection configuration using environment variables
+config = {
+    'host': os.getenv('DB_HOST', 'localhost'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME'),
+    'port': int(os.getenv('DB_PORT')),
+    'ssl_ca': os.getenv('SSL_CA_PATH')
+}
 
 def connect_db():
     """Establishes a connection to the database using the provided configuration."""
@@ -49,9 +60,8 @@ def lista_clientes():
         return {"error": error}, 500
     if not conn:
         return {"error": "Failed to connect to the database"}, 500
-    return {"Livros": [{"nome": cliente["nome"], "cpd": cliente["cpf"], "email": cliente["email"], "id": cliente["id"]} for cliente in clientes]}, 200
-if __name__ == '__main__':
-    app.run(debug=True)
+    return {"Clientes": [{"nome": cliente["nome"], "cpf": cliente["cpf"], "email": cliente["email"], "id": cliente["id"]} for cliente in clientes]}, 200
+
 
 @app.route('/clientes', methods=['POST'])
 def cadastrar_cliente():
@@ -119,7 +129,7 @@ def buscar_cliente(idd):
         return {"error": "Failed to connect to the database"}, 500
     if not cliente:
         return {"error": "ID especificado não encontrado"}, 404
-    return {"nome": cliente['nome'], "email": cliente["email"], "cpf": cliente["cpf"], "seenha": cliente['senha'], "id": cliente["id"]}, 200
+    return {"nome": cliente['nome'], "email": cliente["email"], "cpf": cliente["cpf"], "senha": cliente['senha'], "id": cliente["id"]}, 200
 
 @app.route('/clientes/<int:idd>', methods=['PUT'])
 def editar_cliente(idd):
@@ -754,7 +764,7 @@ def lista_pedidos():
         return {"error": error}, 500
     if not conn:
         return {"error": "Failed to connect to the database"}, 500
-    return {"pedidos": [{"cliente_id": pedido["cliente_id"], "carrinho_id": pedido["carrinho_id"], "data_e_hora": pedido["data"], "status": pedido['status'], "id": pedido["id"]} for pedido in pedidos]}, 200
+    return {"pedidos": [{"cliente_id": pedido["cliente_id"], "carrinho_id": pedido["carrinho_id"], "data_hora": pedido["data_hora"], "status": pedido['status'], "id": pedido["id"]} for pedido in pedidos]}, 200
 
 
 @app.route('/pedidos', methods=['POST'])
@@ -822,7 +832,7 @@ def buscar_pedido(idd):
         return {"error": "Failed to connect to the database"}, 500
     if not pedido:
         return {"error": "ID especificado não encontrado"}, 404
-    return {"cliente_id": pedido['cliente_id'], "carrinho_id": pedido["carrinho_id"], "status": pedido["status"], "id": pedido["id"]}, 200
+    return {"cliente_id": pedido['cliente_id'], "carrinho_id": pedido["carrinho_id"], "status": pedido["status"], "data_hora": pedido['data_hora'], "id": pedido["id"]}, 200
 
 @app.route('/pedidos/cliente/<int:idd>', methods=['GET'])
 def buscar_pedido_cliente(idd):
